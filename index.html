@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nein, danke. – Das Cookie-Ablehn-Spiel</title>
+<meta name="description" content="Du wolltest nur ein Rezept lesen. 20 Level, 1.482 Partner und eine Schnecke stehen zwischen dir und dem Ablehnen-Knopf.">
+<meta name="theme-color" content="#FFF3DC">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%AA%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Rauer Stempel-Rand -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="4"/><feDisplacementMap in="SourceGraphic" scale="7"/></filter>
+</svg>
+
+<!-- Die Seite, die du eigentlich lesen wolltest -->
+<main id="site">
+  <nav class="site-nav">
+    <span class="site-logo"><i class="cookie" style="--s:34px"></i> Omas Backstube</span>
+    <span class="site-links"><a>Rezepte</a><a>Über Oma</a><a>Newsletter</a><a class="site-cta">Abo</a></span>
+  </nav>
+  <article class="site-article">
+    <p class="site-kicker">Klassiker · Backen · 12 Min. Lesezeit</p>
+    <h1>Omas legendäre Schoko-Cookies</h1>
+    <p class="site-meta">Von <b>Oma Hildegard</b> · ★★★★★ 4,9 (2.381 Bewertungen)</p>
+    <div class="site-hero">
+      <i class="cookie c1"></i><i class="cookie c2"></i><i class="cookie c3"></i>
+      <span class="plate"></span>
+    </div>
+    <p>Bevor wir zum Rezept kommen, muss ich ein wenig ausholen. Es war ein nebliger Dienstag im Herbst 1987, als ich zum ersten Mal verstand, dass ein Cookie mehr ist als ein Keks. Der Wind pfiff durch die Fensterläden, und irgendwo bellte ein Hund, der später noch wichtig wird.</p>
+    <p>Mein Mann Günther sagte damals immer: „Hildegard, du kannst nicht jeden Tag backen." Günther hatte Unrecht. Günther hatte oft Unrecht, aber das ist eine andere Geschichte, die ich weiter unten in drei Teilen erzähle.</p>
+    <h2>Zutaten <small>für 12 Stück</small></h2>
+    <ul class="site-list">
+      <li>125 g weiche Butter</li>
+      <li>100 g brauner Zucker</li>
+      <li>50 g weißer Zucker</li>
+      <li>1 Ei (Größe M)</li>
+      <li>1 TL Vanilleextrakt</li>
+      <li>200 g Weizenmehl</li>
+      <li>½ TL Natron</li>
+      <li>1 Prise Salz</li>
+      <li>150 g Zartbitterschokolade, grob gehackt</li>
+    </ul>
+    <h2>Zubereitung</h2>
+    <ol class="site-steps">
+      <li>Ofen auf 180 °C Ober-/Unterhitze vorheizen und ein Blech mit Backpapier belegen.</li>
+      <li>Butter mit beiden Zuckersorten 2–3 Minuten cremig rühren. Ei und Vanille kurz unterrühren.</li>
+      <li>Mehl, Natron und Salz mischen und nur so lange einrühren, bis ein Teig entsteht.</li>
+      <li>Die gehackte Schokolade unterheben. Ein Stück naschen. Das ist Tradition.</li>
+      <li>12 Kugeln formen und mit viel Abstand aufs Blech setzen – sie laufen breit.</li>
+      <li>10–12 Minuten backen: Der Rand ist goldbraun, die Mitte sieht noch weich aus. Genau so soll es sein.</li>
+      <li>10 Minuten auf dem Blech abkühlen lassen. Erst dann werden sie fest.</li>
+    </ol>
+    <p class="site-end">Und der Hund? Der hieß Keks. Guten Appetit. – Oma</p>
+  </article>
+</main>
+
+<div id="slime" aria-hidden="true"></div>
+
+<header id="hud" hidden>
+  <div class="hud-pill hud-l"><span>Level <b id="hudN">1</b>/<span id="hudT">20</span></span><em id="hudName"></em></div>
+  <div class="hud-dots" id="hudDots" aria-hidden="true"></div>
+  <div class="hud-pill hud-r">
+    <span title="So oft hast du (versehentlich) zugestimmt">💀 <b id="hudD">0</b></span>
+    <span title="Zeit">⏱ <b id="hudTime">0:00</b></span>
+    <button id="mute" aria-label="Ton an/aus">🔊</button>
+  </div>
+</header>
+
+<div id="stage"></div>
+
+<div id="snail" class="gone" hidden aria-hidden="true">
+  <div class="snail-say"></div>
+  <div class="snail-in"></div>
+</div>
+<div id="me" hidden aria-hidden="true"></div>
+<div id="fx" aria-hidden="true"></div>
+<div id="overlay"></div>
+
+<script src="js/engine.js"></script>
+<script src="js/levels-banner.js"></script>
+<script src="js/levels-games.js"></script>
+<script>Game.boot();</script>
+</body>
+</html>
