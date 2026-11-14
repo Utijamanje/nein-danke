@@ -19,4 +19,14 @@ js/levels-banner.js   Level 1–7
 js/levels-games.js    Level 8–20
 ```
 
+## Englische Version
+
+Unter `en/` liegt eine englische Fassung („No, thanks."). Sie wird nicht von Hand gepflegt, sondern aus den deutschen Dateien erzeugt: `tools/build_en.py` enthält die Übersetzungstabelle und schreibt `en/` neu.
+
+```bash
+python3 tools/build_en.py
+```
+
+Nach jeder Änderung am Spiel einmal ausführen. Das Skript meldet Texte, die es nicht mehr findet oder die noch deutsch aussehen.
+
 Lokal starten: `index.html` im Browser öffnen. Mit `?level=12` am Ende der Adresse springt man direkt zu einem Level (die Bestzeit zählt dann nicht).

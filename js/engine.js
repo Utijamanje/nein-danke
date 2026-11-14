@@ -294,6 +294,7 @@
     const floaters = Array.from({ length: 14 }, (_, k) => `<i class="cookie" style="--s:${irand(28, 90)}px;left:${irand(0, 96)}%;--dur:${irand(9, 20)}s;--delay:-${irand(0, 20)}s;--sway:${irand(-60, 60)}px"></i>`).join('');
     const ov = h(`<div class="over over-start">
       <div class="start-rain">${floaters}</div>
+      <a class="lang-link" href="en/">English version</a>
       <div class="start-card">
         <i class="cookie bite start-cookie"></i>
         <h1 class="title"><span>Nein,</span><span>danke.</span></h1>
@@ -312,7 +313,8 @@
       state.elapsed += dt;
       const t = fmt(state.elapsed);
       if (t !== state.shownTime) { state.shownTime = t; els.hudTime.textContent = t; }
-      if (snail.active && !snail.hold) stepSnail(dt);
+      /* Am Handy kann man beim Tippen nicht weglaufen: dort wartet Schneck in den Tipp-Leveln */
+      if (snail.active && !snail.hold && !(state.touch && Game.levels[state.i].keys)) stepSnail(dt);
     }
     requestAnimationFrame(tick);
   }
@@ -323,6 +325,7 @@
     els.hudDots.innerHTML = Game.levels.map(() => '<i></i>').join('');
     const track = (e) => {
       state.px = e.clientX; state.py = e.clientY;
+      state.touch = e.pointerType === 'touch';
       if (e.pointerType === 'touch') { els.me.hidden = !state.live || !snail.active; els.me.style.transform = `translate(${state.px}px,${state.py}px)`; }
     };
     addEventListener('pointermove', track, { passive: true });

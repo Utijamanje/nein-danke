@@ -135,41 +135,55 @@
   Game.add({
     name: 'Buchstabensalat',
     setup(c) {
-      const word = 'ABLEHNEN';
+      const word = 'ABLEHNEN', D = 58;
       const el = c.mount(`<section class="dialog spell">
         <span class="dialog-step">Sicherheitsabfrage</span>
         <h2>Bitte buchstabiere deine Entscheidung</h2>
-        <p>Fang die Buchstaben in der richtigen Reihenfolge. Bei einem Fehler fängst du von vorn an.</p>
+        <p>Fang die Buchstaben unten in der richtigen Reihenfolge. Bei einem Fehler verlierst du den letzten Buchstaben.</p>
         <div class="slots">${[...word].map(ch => `<b data-ch="${ch}"></b>`).join('')}</div>
         <div class="dialog-btns"><button class="btn btn-accept btn-s" data-trap data-why="Buchstabieren war dir zu anstrengend. Verständlich. Trotzdem zugestimmt.">Zu anstrengend – akzeptieren</button></div>
       </section>`);
-      const slots = [...el.querySelectorAll('.slots b')];
+      const slots = [...el.querySelectorAll('.slots b')], placed = [];
+      /* Spielfeld = alles unterhalb der Karte, damit kein Buchstabe über Text oder Knöpfen liegt */
+      const top = () => Math.min(el.getBoundingClientRect().bottom + 14, innerHeight - D - 30);
       let pos = 0;
-      const balls = [...word, 'J', 'A', 'O', 'K', 'Y', 'S'].map((ch, i) => {
+      const balls = [...word, 'J', 'O', 'K', 'Y'].map((ch, i) => {
         const b = c.mount(`<button class="letter" style="--hue:${(i * 47) % 360}">${ch}</button>`);
-        return { el: b, ch, taken: false, x: rand(20, innerWidth - 90), y: rand(90, innerHeight - 90), vx: rand(70, 150) * (Math.random() < .5 ? -1 : 1), vy: rand(70, 150) * (Math.random() < .5 ? -1 : 1) };
+        const a = rand(0, 6.28), v = rand(60, 115);
+        return { el: b, ch, taken: false, x: rand(10, innerWidth - D - 10), y: rand(top(), innerHeight - D - 10), vx: Math.cos(a) * v, vy: Math.sin(a) * v };
       });
+      const paint = (b) => { b.el.style.transform = `translate(${b.x.toFixed(1)}px,${b.y.toFixed(1)}px)`; };
+      balls.forEach(paint);
       c.loop((dt) => {
-        const W = innerWidth - 66, H = innerHeight - 66;
-        for (const b of balls) {
-          if (b.taken) continue;
+        const x0 = 8, x1 = innerWidth - D - 8, y0 = top(), y1 = innerHeight - D - 8;
+        const live = balls.filter(b => !b.taken);
+        for (const b of live) {
           b.x += b.vx * dt; b.y += b.vy * dt;
-          if (b.x < 6) { b.x = 6; b.vx = Math.abs(b.vx); } else if (b.x > W) { b.x = W; b.vx = -Math.abs(b.vx); }
-          if (b.y < 74) { b.y = 74; b.vy = Math.abs(b.vy); } else if (b.y > H) { b.y = H; b.vy = -Math.abs(b.vy); }
-          b.el.style.transform = `translate(${b.x}px,${b.y}px)`;
+          if (b.x < x0) { b.x = x0; b.vx = Math.abs(b.vx); } else if (b.x > x1) { b.x = x1; b.vx = -Math.abs(b.vx); }
+          if (b.y < y0) { b.y = y0; b.vy = Math.abs(b.vy); } else if (b.y > y1) { b.y = y1; b.vy = -Math.abs(b.vy); }
         }
+        /* Buchstaben prallen voneinander ab, statt sich zu überdecken */
+        for (let i = 0; i < live.length; i++) for (let j = i + 1; j < live.length; j++) {
+          const a = live[i], b = live[j], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1;
+          if (d >= D) continue;
+          const nx = dx / d, ny = dy / d, push = (D - d) / 2;
+          a.x -= nx * push; a.y -= ny * push; b.x += nx * push; b.y += ny * push;
+          const rel = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
+          if (rel < 0) { a.vx += rel * nx; a.vy += rel * ny; b.vx -= rel * nx; b.vy -= rel * ny; }
+        }
+        live.forEach(paint);
       });
       balls.forEach(b => c.on(b.el, 'pointerdown', (e) => {
         e.preventDefault(); if (b.taken) return;
         if (b.ch === word[pos]) {
-          b.taken = true; b.el.classList.add('taken');
+          b.taken = true; b.el.classList.add('taken'); placed.push(b);
           slots[pos].textContent = b.ch; slots[pos].classList.add('ok'); pos++;
           c.sfx('pop'); c.burst(e.clientX, e.clientY, 6);
           if (pos === word.length) c.win();
         } else {
-          pos = 0; slots.forEach(s => { s.textContent = ''; s.classList.remove('ok'); });
-          balls.forEach(x => { x.taken = false; x.el.classList.remove('taken'); });
-          c.nudge(el); c.sfx('bad');
+          c.sfx('bad'); c.replay(b.el, 'wrong');
+          const last = placed.pop();
+          if (last) { pos--; slots[pos].textContent = ''; slots[pos].classList.remove('ok'); last.taken = false; last.el.classList.remove('taken'); }
         }
       }));
     },

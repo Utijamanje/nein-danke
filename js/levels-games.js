@@ -107,20 +107,35 @@
   Game.add({
     name: 'Tipptest',
     snail: true,
+    keys: true,
     setup(c) {
-      const phrase = pick(['Ich lehne alle Cookies ab und meine es ernst.', 'Meine Daten bleiben bei mir und nicht bei Kevin.', 'Nein bleibt nein, auch wenn der Knopf gruen ist.']);
-      const w = c.cmp({ title: 'Schriftliche Ablehnung', task: 'Tippe den Satz exakt ab – mit Groß- und Kleinschreibung. Die Maus darfst du dabei nicht vergessen.' });
-      w.game.innerHTML = `<div class="typing"><div class="type-text">${[...phrase].map(ch => `<span>${ch === ' ' ? '&nbsp;' : ch}</span>`).join('')}</div>
-        <input class="type-in" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" maxlength="${phrase.length}" aria-label="Satz abtippen" placeholder="Hier tippen …"></div>`;
+      const phrase = pick(['Ich lehne alle Cookies ab und meine es ernst.', 'Meine Daten bleiben bei mir und nicht bei Kevin.', 'Nein bleibt nein, egal wie der Knopf aussieht.']);
+      const w = c.cmp({ title: 'Schriftliche Ablehnung', task: 'Tippe den Satz ab. Falsche Tasten zählen einfach nicht. Die Maus darfst du dabei nicht vergessen.', cls: 'cmp-top' });
+      w.game.innerHTML = `<div class="typing"><div class="type-text">${[...phrase].map(ch => `<span>${ch}</span>`).join('')}</div>
+        <input class="type-in" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Satz abtippen" placeholder="Einfach lostippen …"></div>`;
       const inp = w.game.querySelector('input'), spans = [...w.game.querySelectorAll('.type-text span')];
-      const draw = () => {
-        const v = inp.value;
-        spans.forEach((s, i) => { s.className = i < v.length ? (v[i] === phrase[i] ? 'ok' : 'bad') : i === v.length ? 'cur' : ''; });
-        if (v === phrase) c.win();
+      let pos = 0, last = '';
+      const draw = () => spans.forEach((s, i) => { s.className = i < pos ? 'ok' : i === pos ? 'cur' : ''; });
+      const feed = (ch) => {
+        if (!c.live()) return;
+        if (ch.toLowerCase() !== phrase[pos].toLowerCase()) { c.sfx('bad'); c.replay(spans[pos], 'miss'); return; }
+        pos++; c.sfx('tick'); draw();
+        if (pos === phrase.length) c.win();
       };
-      c.on(inp, 'input', () => { c.sfx('tick'); draw(); });
+      /* Das Feld ist nur Tastenfänger (wichtig fürs Handy); gewertet wird Zeichen für Zeichen */
+      c.on(inp, 'input', (e) => {
+        const v = inp.value; let k = 0;
+        while (k < last.length && k < v.length && v[k] === last[k]) k++;
+        for (const ch of v.slice(k)) feed(ch);
+        last = v;
+        if (!e.isComposing && (v.endsWith(' ') || v.length > 24)) { inp.value = ''; last = ''; }
+      });
       c.on(inp, 'paste', (e) => e.preventDefault());
-      c.on(window, 'keydown', () => { if (document.activeElement !== inp) inp.focus(); });
+      /* Funktioniert auch, wenn das Feld den Fokus verloren hat */
+      c.on(window, 'keydown', (e) => {
+        if (document.activeElement === inp || e.metaKey || e.ctrlKey || e.altKey || e.key.length !== 1) return;
+        e.preventDefault(); feed(e.key);
+      });
       inp.focus({ preventScroll: true }); draw();
     },
   });
@@ -290,6 +305,7 @@
       const w = c.cmp({ title: 'Der Weg zum Ablehnen-Knopf', task: 'Klick auf den Start und führe den Zeiger zum Ziel, ohne die Wände zu berühren. Am Handy: Finger gedrückt halten und ziehen.', cls: 'cmp-wide' });
       w.game.innerHTML = `<div class="maze" style="--cols:${map[0].length}">${map.map(r => [...r].map(ch => `<i class="${ch === '#' ? 'w' : ch === 'S' ? 'p s' : ch === 'G' ? 'p g' : 'p'}"></i>`).join('')).join('')}</div>`;
       const grid = w.game.querySelector('.maze'), start = grid.querySelector('.s');
+      start.dataset.l = 'Start'; grid.querySelector('.g').dataset.l = 'Ziel';
       let active = false, lx = 0, ly = 0;
       const fail = () => { active = false; grid.classList.remove('on'); grid.querySelectorAll('.v').forEach(v => v.classList.remove('v')); c.nudge(grid); c.sfx('bad'); };
       const probe = (x, y) => {
@@ -319,6 +335,7 @@
   Game.add({
     name: 'Ablehn-Passwort',
     snail: true,
+    keys: true,
     setup(c) {
       const rules = [
         ['Mindestens 8 Zeichen', v => v.length >= 8],

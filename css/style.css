@@ -214,11 +214,17 @@ body.dead #stage { animation: shake .5s; }
 .slots b.ok { background: var(--mint); animation: poof .4s var(--spring); }
 .slots b.ok::before { content: none; }
 .letter {
-  position: fixed; left: 0; top: 0; z-index: 8; width: 60px; height: 60px; padding: 0; border: var(--bd); border-radius: 50%;
+  position: fixed; left: 0; top: 0; z-index: 8; width: 58px; height: 58px; padding: 0; border: var(--bd); border-radius: 50%;
   background: hsl(var(--hue) 95% 72%); font-size: 1.6rem; font-weight: 900; cursor: pointer; box-shadow: 4px 4px 0 var(--ink);
   touch-action: none; transition: scale .3s var(--spring), opacity .2s;
 }
-.letter:hover { scale: 1.15; }
+.letter:hover { scale: 1.08; }
+.letter.wrong { animation: wrong .4s; }
+@keyframes wrong { 0%, 70% { background: var(--red); } 25% { rotate: -14deg; } 55% { rotate: 12deg; } }
+.dialog.spell { inset: 62px 0 auto; margin: 0 auto; padding: 16px 22px 18px; }
+.dialog.spell .dialog-step { margin-bottom: 6px; }
+.dialog.spell .slots { margin-top: 12px; }
+.dialog.spell .dialog-btns { margin-top: 14px; }
 .letter.taken { scale: 0; opacity: 0; pointer-events: none; }
 @media (max-width: 520px) { .slots b { width: 30px; height: 38px; font-size: 1.1rem; } }
 
@@ -328,10 +334,11 @@ body.dead #stage { animation: shake .5s; }
 
 /* Tipptest */
 .typing { width: 100%; display: grid; gap: 12px; }
-.type-text { padding: 14px 16px; border: var(--bd); border-radius: 16px; background: var(--cream); font: 600 1.12rem/1.7 var(--mono); }
+.type-text { white-space: pre-wrap; overflow-wrap: anywhere; padding: 14px 16px; border: var(--bd); border-radius: 16px; background: var(--cream); font: 600 1.12rem/1.7 var(--mono); }
 .type-text span { border-radius: 3px; }
 .type-text .ok { color: #1a9b5f; }
-.type-text .bad { background: var(--red); color: #fff; }
+.type-text .miss { animation: miss .3s; }
+@keyframes miss { 0%, 60% { background: var(--red); color: #fff; } }
 .type-text .cur { box-shadow: 0 3px 0 var(--ink); animation: blink .8s steps(2) infinite; }
 @keyframes blink { 50% { box-shadow: none; } }
 .type-in, .pw-in { width: 100%; padding: 12px 16px; border: var(--bd); border-radius: 14px; background: var(--paper); font: 600 1.05rem var(--mono); color: var(--ink); outline: none; user-select: text; -webkit-user-select: text; }
@@ -399,7 +406,7 @@ body.dead #stage { animation: shake .5s; }
 .maze .s { background: var(--mint) !important; cursor: pointer; }
 .maze .g { background: var(--sun) !important; }
 .maze .s::after, .maze .g::after { position: absolute; inset: 0; display: grid; place-items: center; font: 900 .62rem var(--font); font-style: normal; }
-.maze .s::after { content: 'Start'; } .maze .g::after { content: 'Ziel'; }
+.maze .s::after, .maze .g::after { content: attr(data-l); }
 .maze:not(.on) .s { animation: pulse 0.7s ease-in-out infinite alternate; }
 .maze.on { cursor: crosshair; }
 
@@ -461,6 +468,8 @@ body.dead #stage { animation: shake .5s; }
 .start-rain { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .start-rain .cookie { position: absolute; top: -110px; opacity: .55; animation: cookieRain var(--dur) linear var(--delay) infinite; }
 @keyframes cookieRain { to { translate: var(--sway) calc(100dvh + 220px); rotate: 2turn; } }
+.lang-link { position: absolute; right: 16px; top: 14px; z-index: 2; padding: 6px 14px; border: var(--bd); border-radius: 99px; background: var(--paper); color: var(--ink); font-size: .85rem; font-weight: 800; text-decoration: none; box-shadow: 3px 3px 0 var(--ink); }
+.lang-link:hover { background: var(--sun); }
 .start-card { position: relative; display: grid; justify-items: center; gap: 20px; text-align: center; max-width: 640px; }
 .title { display: grid; font-size: clamp(4.4rem, 19vw, 11rem); line-height: .82; font-weight: 900; letter-spacing: -.045em; }
 .title span { display: block; animation: drop .9s var(--spring) both; text-shadow: .035em .035em 0 var(--paper), .07em .07em 0 var(--ink); }

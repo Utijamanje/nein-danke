@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>No, thanks. – The cookie-declining game</title>
+<meta name="description" content="You just wanted to read a recipe. 20 levels, 1,482 partners and one snail stand between you and the Decline button.">
+<meta name="theme-color" content="#FFF3DC">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%AA%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- Rauer Stempel-Rand -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="4"/><feDisplacementMap in="SourceGraphic" scale="7"/></filter>
+</svg>
+
+<!-- Die Seite, die du eigentlich lesen wolltest -->
+<main id="site">
+  <nav class="site-nav">
+    <span class="site-logo"><i class="cookie" style="--s:34px"></i> Grandma’s Bakery</span>
+    <span class="site-links"><a>Recipes</a><a>About Grandma</a><a>Newsletter</a><a class="site-cta">Subscribe</a></span>
+  </nav>
+  <article class="site-article">
+    <p class="site-kicker">Classics · Baking · 12 min read</p>
+    <h1>Grandma’s legendary chocolate chip cookies</h1>
+    <p class="site-meta">By <b>Grandma Hildegard</b> · ★★★★★ 4.9 (2,381 ratings)</p>
+    <div class="site-hero">
+      <i class="cookie c1"></i><i class="cookie c2"></i><i class="cookie c3"></i>
+      <span class="plate"></span>
+    </div>
+    <p>Before we get to the recipe, I need to back up a little. It was a foggy Tuesday in the autumn of 1987 when I first understood that a cookie is more than a biscuit. The wind whistled through the shutters, and somewhere a dog barked. The dog becomes important later.</p>
+    <p>My husband Günther always used to say: “Hildegard, you can’t bake every day." Günther was wrong. Günther was often wrong, but that is a different story, which I tell further down in three parts.</p>
+    <h2>Ingredients <small>makes 12</small></h2>
+    <ul class="site-list">
+      <li>125 g (½ cup) soft butter</li>
+      <li>100 g (½ cup) brown sugar</li>
+      <li>50 g (¼ cup) white sugar</li>
+      <li>1 medium egg</li>
+      <li>1 tsp vanilla extract</li>
+      <li>200 g (1⅔ cups) plain flour</li>
+      <li>½ tsp baking soda</li>
+      <li>1 pinch of salt</li>
+      <li>150 g dark chocolate, roughly chopped</li>
+    </ul>
+    <h2>Method</h2>
+    <ol class="site-steps">
+      <li>Preheat the oven to 180 °C (350 °F) and line a tray with baking paper.</li>
+      <li>Cream the butter with both sugars for 2–3 minutes. Briefly mix in the egg and vanilla.</li>
+      <li>Combine flour, baking soda and salt and stir in just until a dough forms.</li>
+      <li>Fold in the chopped chocolate. Sneak a piece. It’s tradition.</li>
+      <li>Shape 12 balls and space them well apart on the tray – they spread.</li>
+      <li>Bake for 10–12 minutes: the edges are golden, the middle still looks soft. That is exactly right.</li>
+      <li>Let them cool on the tray for 10 minutes. Only then do they firm up.</li>
+    </ol>
+    <p class="site-end">And the dog? His name was Biscuit. Enjoy. – Grandma</p>
+  </article>
+</main>
+
+<div id="slime" aria-hidden="true"></div>
+
+<header id="hud" hidden>
+  <div class="hud-pill hud-l"><span>Level <b id="hudN">1</b>/<span id="hudT">20</span></span><em id="hudName"></em></div>
+  <div class="hud-dots" id="hudDots" aria-hidden="true"></div>
+  <div class="hud-pill hud-r">
+    <span title="How often you (accidentally) accepted">💀 <b id="hudD">0</b></span>
+    <span title="Time">⏱ <b id="hudTime">0:00</b></span>
+    <button id="mute" aria-label="Sound on/off">🔊</button>
+  </div>
+</header>
+
+<div id="stage"></div>
+
+<div id="snail" class="gone" hidden aria-hidden="true">
+  <div class="snail-say"></div>
+  <div class="snail-in"></div>
+</div>
+<div id="me" hidden aria-hidden="true"></div>
+<div id="fx" aria-hidden="true"></div>
+<div id="overlay"></div>
+
+<script src="js/engine.js"></script>
+<script src="js/levels-banner.js"></script>
+<script src="js/levels-games.js"></script>
+<script>Game.boot();</script>
+</body>
+</html>
